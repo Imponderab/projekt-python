@@ -63,7 +63,9 @@ def execute_paths(path_list, is_reading, filetype ='json'):
                 path = make_path('json', month, day, time)
                 exit_result += json_read(path)
                 path = make_path('csv', month, day, time)
-                exit_result += csv_read(path)
+                wynik_csv = csv_read(str(path.parent))
+                if wynik_csv is not None:
+                    exit_result += csv_read(str(path.parent))
             elif filetype == 'json':
                 path = make_path(filetype, month, day, time)
                 json_write(path)
