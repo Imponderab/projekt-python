@@ -59,20 +59,30 @@ def execute_paths(path_list, is_reading, filetype ='json'):
         else:
             time = 'invalidTime'
         if (not month == 'invalidMonth') and (not day == 'invalidDay') and (not time == 'invalidTime'):
+            # --- SEKCJA ODCZYTU ---
             if is_reading:
-                path = make_path('json', month, day, time)
-                exit_result += json_read(path)
-                path = make_path('csv', month, day, time)
-                wynik_csv = csv_read(str(path.parent))
-                if wynik_csv is not None:
-                    exit_result += csv_read(str(path.parent))
+                if filetype in ['json', 'both']:
+                    path = make_path('json', month, day, time)
+                    exit_result += json_read(path)
+                
+                if filetype in ['csv', 'both']:
+                    path = make_path('csv', month, day, time)
+                    wynik_csv = csv_read(str(path.parent))
+                    if wynik_csv is not None:
+                        exit_result += wynik_csv  # Dodajemy zapisaną zmienną, by nie czytać pliku 2 razy
+            
+            # --- SEKCJA TWORZENIA ---
             elif filetype == 'json':
                 path = make_path(filetype, month, day, time)
                 json_write(path)
-            else:
+            elif filetype == 'csv':
                 path = make_path(filetype, month, day, time)
                 csv_write(str(path.parent))
-    if is_reading:
+            elif filetype == 'both':
+                path_j = make_path('json', month, day, time)
+                json_write(path_j)
+                path_c = make_path('csv', month, day, time)
+                csv_write(str(path_c.parent))    if is_reading:
         return exit_result
     return None
 
