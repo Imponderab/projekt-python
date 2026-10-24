@@ -1,6 +1,7 @@
 import json
 import random
 from pathlib import Path
+from csv_handler import csv_read, csv_write
 
 def execute_paths(path_list, is_reading, filetype ='json'):
     exit_result = 0
@@ -62,13 +63,13 @@ def execute_paths(path_list, is_reading, filetype ='json'):
                 path = make_path('json', month, day, time)
                 exit_result += json_read(path)
                 path = make_path('csv', month, day, time)
-                exit_result = csv_read(path)
+                exit_result += csv_read(path)
             elif filetype == 'json':
                 path = make_path(filetype, month, day, time)
                 json_write(path)
             else:
                 path = make_path(filetype, month, day, time)
-                csv_write(path)
+                csv_write(str(path.parent))
     if is_reading:
         return exit_result
     return None
