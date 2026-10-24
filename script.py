@@ -27,7 +27,7 @@ def execute_paths(path_list, is_reading, filetype ='json'):
         elif month == 10:
             month = 'Październik'
         elif month == 11:
-            month = 'Lipiec'
+            month = 'Listopad'
         elif month == 12:
             month = 'Grudzień'
         else:
