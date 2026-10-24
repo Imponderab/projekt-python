@@ -83,6 +83,7 @@ def execute_paths(path_list, is_reading, filetype ='json'):
                 json_write(path_j)
                 path_c = make_path('csv', month, day, time)
                 csv_write(str(path_c.parent))
+
     if is_reading:
         return exit_result
     return None
