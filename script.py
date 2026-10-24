@@ -2,9 +2,9 @@ import json
 import random
 from pathlib import Path
 
-def execute_paths(paths, is_reading, filetype = 'json'):
+def execute_paths(path_list, is_reading, filetype ='json'):
     exit_result = 0
-    for structure in paths:
+    for structure in path_list:
         month = structure % 100
         if month == 1:
             month = 'Styczeń'
@@ -54,15 +54,21 @@ def execute_paths(paths, is_reading, filetype = 'json'):
         if structure == 1:
             time = 'rano'
         elif structure == 2:
-            time = 'wieczorem' # przed mym domem wystawie ekran i wyświetle film
+            time = 'wieczorem' # przed mym domem wystawie ekran i wyświetlę film
         else:
             time = 'invalidTime'
         if (not month == 'invalidMonth') and (not day == 'invalidDay') and (not time == 'invalidTime'):
-            path = make_path(filetype, month, day, time)
             if is_reading:
+                path = make_path('json', month, day, time)
                 exit_result += json_read(path)
-            else:
+                path = make_path('csv', month, day, time)
+                exit_result = csv_read(path)
+            elif filetype == 'json':
+                path = make_path(filetype, month, day, time)
                 json_write(path)
+            else:
+                path = make_path(filetype, month, day, time)
+                csv_write(path)
     if is_reading:
         return exit_result
     return None
