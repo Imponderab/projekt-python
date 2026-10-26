@@ -3,7 +3,17 @@ import random
 from pathlib import Path
 from csv_handler import csv_read, csv_write
 
-def execute_paths(path_list, is_reading, filetype ='json'):
+# Część zadania przeznaczona na osobę 2 (i 4)
+
+# Funkcja dostaje liczbę 4 cyfrowych kodów reprezentujących ścieżki podane
+# przez użytkownika o następującym składzie: cdmm (Czas / Dzień / Miesiąc Miesiąc)
+# Funkcja odszyfrowuje kody i przekształca je na ścieżki.
+# Zmienna bool is_reading zawiera informacje czy użytkownik chce odczytać
+# wartości z plików w danych folderach czy utworzyć nowe.
+# Zmienna Filetype zawiera informacje czy użytkownik chce operować na
+# plikach typu json, csv czy obu. Może przyjąć wartości json, csv, both.
+
+def execute_paths(path_list, is_reading, filetype='json'):
     exit_result = 0
     for structure in path_list:
         month = structure % 100
@@ -55,7 +65,7 @@ def execute_paths(path_list, is_reading, filetype ='json'):
         if structure == 1:
             time = 'rano'
         elif structure == 2:
-            time = 'wieczorem' # przed mym domem wystawie ekran i wyświetlę film
+            time = 'wieczorem'  # przed mym domem wystawie ekran i wyświetlę film
         else:
             time = 'invalidTime'
         if (not month == 'invalidMonth') and (not day == 'invalidDay') and (not time == 'invalidTime'):
@@ -64,13 +74,13 @@ def execute_paths(path_list, is_reading, filetype ='json'):
                 if filetype in ['json', 'both']:
                     path = make_path('json', month, day, time)
                     exit_result += json_read(path)
-                
+
                 if filetype in ['csv', 'both']:
                     path = make_path('csv', month, day, time)
                     wynik_csv = csv_read(str(path.parent))
                     if wynik_csv is not None:
                         exit_result += wynik_csv  # Dodajemy zapisaną zmienną, by nie czytać pliku 2 razy
-            
+
             # --- SEKCJA TWORZENIA ---
             elif filetype == 'json':
                 path = make_path(filetype, month, day, time)
@@ -88,6 +98,10 @@ def execute_paths(path_list, is_reading, filetype ='json'):
         return exit_result
     return None
 
+# Funkcja składa odpowiednie nazwy katalogów, aby utworzyć ścieżkę.
+# filetype = json / csv -> typ pliku, na którym będziemy działać
+# month / day / time odpowiednie katalogi.
+
 def make_path(filetype, month, day, time = 'rano'):
     path = Path(month)
     if not path.exists():
@@ -100,6 +114,10 @@ def make_path(filetype, month, day, time = 'rano'):
         path.mkdir()
     path /= 'Dane.' + filetype
     return path
+
+# Funckja odczytuje wartość "Czas" pliku json o pozycji
+# określonej zmienną path, jeżeli wartość 'Model' w tym pliku to 'A'
+# Jeżeli plik o danej ścieżce nie istnieje, zwraca 0
 
 def json_read(path, model = 'A'):
     if not path.exists():
@@ -114,6 +132,9 @@ def json_read(path, model = 'A'):
                     time_int = time_int * 10 + int(letter) - int('0')
         return time_int
 
+# Funkcja zapisuje losowo wygenerowane dane do pliku json
+# o ścieżce zdefiniowanej przez zmienną path
+
 def json_write(path):
     model = random.choice(['A', 'B', 'C'])
     result = random.randint(0, 1000)
@@ -125,9 +146,3 @@ def json_write(path):
     }
     with open(path, 'w') as file:
         json.dump(data, file)
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    paths = [1112, 1704, 1821, 2303]
-    print(execute_paths(paths, True))
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
